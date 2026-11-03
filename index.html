@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BAKU - Bahan Ajar UT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <button class="menu-toggle" :class="{ hidden: sidebarOpen }" @click="sidebarOpen = !sidebarOpen" :aria-expanded="sidebarOpen" aria-label="Buka navigasi"><span></span><span></span><span></span></button>
+      <div v-if="sidebarOpen" class="nav-backdrop" @click="sidebarOpen = false"></div>
+      <aside class="sidebar" :class="{ open: sidebarOpen }">
+        <button class="close-sidebar" @click="sidebarOpen = false" aria-label="Tutup navigasi">×</button>
+        <div class="brand"><span class="brand-mark">B</span><span class="brand-name">BAKU</span></div>
+        <p class="brand-note">Bahan Ajar<br />Universitas Terbuka</p>
+        <nav aria-label="Navigasi utama">
+          <button :class="{active: tab === 'stok'}" @click="tab = 'stok'; sidebarOpen = false">
+            <span class="nav-icon">▤</span> Stok bahan ajar
+          </button>
+          <button
+            :class="{active: tab === 'tracking'}"
+            @click="tab = 'tracking'; sidebarOpen = false"
+          >
+            <span class="nav-icon">⌖</span> Tracking DO
+          </button>
+          <button :class="{active: tab === 'order'}" @click="tab = 'order'; sidebarOpen = false">
+            <span class="nav-icon">↗</span> Buat pengiriman
+          </button>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Sistem distribusi bahan ajar</p>
+            <h1>{{ pageTitle }}</h1>
+          </div>
+          <div class="operator">
+            <span class="avatar">UT</span>
+            <div><strong>Admin Gudang</strong><small>UPBJJ Pusat</small></div>
+          </div>
+        </header>
+        <section v-show="tab === 'stok'">
+          <ba-stock-table
+            :items="state.stok"
+            :upbjj-list="state.upbjjList"
+            :kategori-list="state.kategoriList"
+            @save="saveStock"
+            @remove="askRemove"
+          ></ba-stock-table>
+        </section>
+        <section v-show="tab === 'tracking'">
+          <do-tracking
+            :orders="state.tracking"
+            @add-progress="addProgress"
+          ></do-tracking>
+        </section>
+        <section v-show="tab === 'order'">
+          <order-form
+            :paket="state.paket"
+            :pengiriman-list="state.pengirimanList"
+            @create-order="createOrder"
+          ></order-form>
+        </section>
+      </main>
+      <transition name="toast"><div v-if="successMessage" class="success-toast"><span>✓</span>{{ successMessage }}</div></transition>
+      <app-modal ref="modal"></app-modal>
+    </div>
+    <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/components/status-badge.js"></script>
+    <script src="js/components/stock-table.js"></script>
+    <script src="js/components/do-tracking.js"></script>
+    <script src="js/components/order-form.js"></script>
+    <script src="js/components/app-modal.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

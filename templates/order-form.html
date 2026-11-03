@@ -1,0 +1,57 @@
+<template id="tpl-order"
+  ><div class="order-layout">
+    <section class="form-panel">
+      <p class="section-label">PENGIRIMAN BARU</p>
+      <h2>Data penerima</h2>
+      <p class="muted">Isi data dengan teliti sebelum delivery order dibuat.</p>
+      <form @submit.prevent="submit" @input="error=''" class="order-fields">
+        <label
+          >NIM mahasiswa*<input
+            v-model.trim="form.nim"
+            inputmode="numeric"
+            placeholder="Masukkan 9 digit NIM" /></label
+        ><label
+          >Nama mahasiswa*<input
+            v-model.trim="form.nama"
+            placeholder="Nama lengkap penerima" /></label
+        ><label
+          >Jenis pengiriman*<select v-model="form.ekspedisi">
+            <option disabled value="">Pilih layanan</option>
+            <option v-for="x in pengirimanList" :key="x.kode">
+              JNE {{x.nama}}
+            </option>
+          </select></label
+        ><label
+          >Tanggal kirim*<input v-model="form.tanggal" type="date" /></label
+        ><label
+          >Paket bahan ajar*<select v-model="form.paket">
+            <option disabled value="">Pilih paket</option>
+            <option v-for="x in paket" :key="x.kode" :value="x.kode">
+              {{x.kode}} — {{x.nama}}
+            </option>
+          </select></label
+        >
+        <p v-if="error" class="validation">{{error}}</p>
+        <button class="btn primary wide-btn">Buat delivery order →</button>
+      </form>
+    </section>
+    <aside class="receipt">
+      <p class="section-label">RINGKASAN ORDER</p>
+      <div class="receipt-number">{{generated}}</div>
+      <div v-if="selected">
+        <h3>{{selected.nama}}</h3>
+        <p class="package-code">{{selected.kode}}</p>
+        <ul>
+          <li v-for="item in selected.isi" :key="item">{{item}}</li>
+        </ul>
+      </div>
+      <p v-else>Pilih paket untuk melihat isi bahan ajar.</p>
+      <div class="receipt-total">
+        <span>Total pembayaran</span><strong>{{rupiah(total)}}</strong>
+      </div>
+      <p class="delivery-date">
+        Estimasi dikirim<br /><strong>{{date(form.tanggal)}}</strong>
+      </p>
+    </aside>
+  </div></template
+>
